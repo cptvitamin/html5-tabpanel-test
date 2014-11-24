@@ -11,20 +11,20 @@
         padding: 0;
         font-family: sans-serif;
       }
-      nav ul {
+      ul {
         margin: 0 0 1em 0;
         padding: 0;
         list-style: none;
       }
-      nav ul li {
+      ul li {
         display: inline;
       }
-      nav ul li a {
+      ul li {
         display: inline-block;
         padding: 1em;
         border: 2px solid blue;
       }
-      nav ul li a[aria-selected="true"] {
+      ul li[aria-selected="true"] {
         background: blue;
         color: white;
       }
@@ -46,16 +46,14 @@
     <h1>HTML5 <code>tabpanel</code> test</h1>
     <p>Testing for a possible bug in the HTML spec regarding using tabpanels with <code>&lt;section&gt;</code> elements.</p>
 
-    <nav>
-      <ul role="tablist">
-        <li><a href="#tab-panel-1" role="tab" aria-selected="true">Panel 1</a></li>
-        <li><a href="#tab-panel-2" role="tab" aria-selected="false">Panel 2</a></li>
-        <li><a href="#tab-panel-3" role="tab" aria-selected="false">Panel 3</a></li>
-      </ul>
-    </nav>
+    <ul role="tablist">
+      <li role="tab" tabindex="0" aria-controls="tab-panel-1" aria-selected="true">Panel 1</li>
+      <li role="tab" tabindex="0" aria-controls="tab-panel-2" aria-selected="false">Panel 2</li>
+      <li role="tab" tabindex="0" aria-controls="tab-panel-3" aria-selected="false">Panel 3</li>
+    </ul>
 
-    <section id="tab-panel-1" role="tabpanel" aria-hidden="false" tabindex="-1">
-      <h2>This is tab panel 1</h2>
+    <section id="tab-panel-1" role="tabpanel" aria-hidden="false" tabindex="-1" aria-labelledby="tab-panel-title-1">
+      <h2 id="tab-panel-title-1">This is tab panel 1</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -64,8 +62,8 @@
       proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </section>
 
-    <section id="tab-panel-2" role="tabpanel" aria-hidden="true" tabindex="-1">
-      <h2>This is tab panel 2</h2>
+    <section id="tab-panel-2" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="tab-panel-title-2">
+      <h2 id="tab-panel-title-2">This is tab panel 2</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -74,8 +72,8 @@
       proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </section>
 
-    <section id="tab-panel-3" role="tabpanel" aria-hidden="true" tabindex="-1">
-      <h2>This is tab panel 3</h2>
+    <section id="tab-panel-3" role="tabpanel" aria-hidden="true" tabindex="-1" aria-labelledby="tab-panel-title-3">
+      <h2 id="tab-panel-title-3">This is tab panel 3</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
       quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -87,11 +85,28 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script type="text/javascript">
     jQuery(function($) {
-      $('nav ul li a').click(function(e) {
+      
+      // returns true on mouse click, space or enter
+      function a11yClick(event){
+        if(event.type === 'click'){
+            return true;
+        }
+        else if(event.type === keypress){
+            var code = event.charCode || event.keyCode;
+            if((code === 32)|| (code === 13)){
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+      }
+      
+      $('ul li').on('click, keypress', function(e) {
         e.preventDefault();
 
         // Aria-selected adjustments
-        $('nav ul li a').each(function() {
+        $('ul li').each(function() {
           $(this).attr('aria-selected', 'false');
         });
 
@@ -102,7 +117,7 @@
           $(this).attr('aria-hidden', 'true');
         });
 
-        $($(this).attr('href')).attr('aria-hidden', 'false');
+        $('#' + $(this).attr('aria-controls')).attr('aria-hidden', 'false');
       })
     });
   </script>
