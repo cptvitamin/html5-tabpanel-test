@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="HTML5 tabpanel test">
+    <style type="text/css">
+      body {
+        margin: 16px;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      nav ul {
+        margin: 0 0 1em 0;
+        padding: 0;
+        list-style: none;
+      }
+      nav ul li {
+        display: inline;
+      }
+      nav ul li a {
+        display: inline-block;
+        padding: 1em;
+        border: 2px solid blue;
+      }
+      nav ul li a[aria-selected="true"] {
+        background: blue;
+        color: white;
+      }
+      section {
+        width: 50%;
+        padding: 1em;
+        border: 2px solid blue;
+      }
+      section[role="tabpanel"] {
+        position: absolute;
+        left: -9999em;
+      }
+      section[aria-hidden="false"] {
+        left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HTML5 <code>tabpanel</code> test</h1>
+    <p>Testing for a possible bug in the HTML spec regarding using tabpanels with <code>&lt;section&gt;</code> elements.</p>
+
+    <nav>
+      <ul role="tablist">
+        <li><a href="#tab-panel-1" role="tab" aria-selected="true">Panel 1</a></li>
+        <li><a href="#tab-panel-2" role="tab" aria-selected="false">Panel 2</a></li>
+        <li><a href="#tab-panel-3" role="tab" aria-selected="false">Panel 3</a></li>
+      </ul>
+    </nav>
+
+    <section id="tab-panel-1" role="tabpanel" aria-hidden="false" tabindex="-1">
+      <h2>This is tab panel 1</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </section>
+
+    <section id="tab-panel-2" role="tabpanel" aria-hidden="true" tabindex="-1">
+      <h2>This is tab panel 2</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </section>
+
+    <section id="tab-panel-3" role="tabpanel" aria-hidden="true" tabindex="-1">
+      <h2>This is tab panel 3</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </section>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    jQuery(function($) {
+      $('nav ul li a').click(function(e) {
+        e.preventDefault();
+
+        // Aria-selected adjustments
+        $('nav ul li a').each(function() {
+          $(this).attr('aria-selected', 'false');
+        });
+
+        $(this).attr('aria-selected', 'true');
+
+        // Section adjustments
+        $('section').each(function() {
+          $(this).attr('aria-hidden', 'true');
+        });
+
+        $($(this).attr('href')).attr('aria-hidden', 'false');
+      })
+    });
+  </script>
+</html>
