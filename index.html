@@ -87,12 +87,12 @@
     jQuery(function($) {
       
       // returns true on mouse click, space or enter
-      function a11yClick(event){
-        if(event.type === 'click'){
+      function a11yClick(e){
+        if(e.type === 'click'){
             return true;
         }
-        else if(event.type === keypress){
-            var code = event.charCode || event.keyCode;
+        else if(e.type === 'keypress'){
+            var code = e.charCode || e.keyCode;
             if((code === 32)|| (code === 13)){
                 return true;
             }
@@ -102,23 +102,26 @@
         }
       }
       
-      $('ul li').on('click, keypress', function(e) {
-        e.preventDefault();
+      $('ul li').on('click keypress', function(e) {
+        if(a11yClick(e) === true){
+          e.preventDefault();
 
-        // Aria-selected adjustments
-        $('ul li').each(function() {
-          $(this).attr('aria-selected', 'false');
-        });
+          // Aria-selected adjustments
+          $('ul li').each(function() {
+            $(this).attr('aria-selected', 'false');
+          });
 
-        $(this).attr('aria-selected', 'true');
+          $(this).attr('aria-selected', 'true');
 
-        // Section adjustments
-        $('section').each(function() {
-          $(this).attr('aria-hidden', 'true');
-        });
+          // Section adjustments
+          $('section').each(function() {
+            $(this).attr('aria-hidden', 'true');
+          });
 
-        // Activate and focus
-        $('#' + $(this).attr('aria-controls')).attr('aria-hidden', 'false').focus();
+          // Activate and focus
+          $('#' + $(this).attr('aria-controls')).attr('aria-hidden', 'false');
+          $('#' + $(this).attr('aria-controls')).attr('aria-hidden', 'false').focus();
+        };
       })
     });
   </script>
